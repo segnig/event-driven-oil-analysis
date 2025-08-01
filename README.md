@@ -1,2 +1,52 @@
-# event-driven-oil-analysis
-Analyzing structural breaks in Brent oil prices using Bayesian Change Point Detection (PyMC3), with insights linked to major geopolitical and economic events. Includes an interactive dashboard built with Flask and React.
+## 🔁 Data Science Workflow Flowchart – Brent Oil Price Project
+
+```text
++-----------------------------+
+| 1. Research & Development   |
++-----------------------------+
+            |
+            v
++-----------------------------+
+| 2. Data Collection & Prep   |
+| • Load Brent price data     |
+| • Collect 10–15 key events  |
++-----------------------------+
+            |
+            v
++-----------------------------+
+| 3. Data Cleaning & Preproc  |
+| • Convert dates             |
+| • Compute log returns       |
+| • Remove nulls/duplicates   |
++-----------------------------+
+            |
+            v
++-----------------------------+
+| 4. Exploratory Data Analysis|
+| • Plot prices & returns     |
+| • Stationarity checks (ADF) |
+| • Overlay events on timeline|
++-----------------------------+
+            |
+            v
++-----------------------------+
+| 5. Feature Engineering      |
+| • Volatility indicators     |
+| • Event encodings (optional)|
++-----------------------------+
+            |
+            v
++-----------------------------+
+| 6. Model Deployment         |
+| • PyMC3 Bayesian model      |
+| • Flask API backend         |
+| • React dashboard frontend  |
++-----------------------------+
+            |
+            v
++-----------------------------+
+| 7. Monitoring & Maintenance |
+| • Future real-time updates  |
+| • Multi-CPD or VAR modeling |
++-----------------------------+
+```
