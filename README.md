@@ -144,5 +144,5 @@ Open `http://localhost:3000` to explore the dashboard.
 
 ## Contact
 
-Created by \[Your Name]
+Created by \Segni Girma
 Email: [segnigirma11@gmail.com](mailto:segnigirma11@gmail.com)
