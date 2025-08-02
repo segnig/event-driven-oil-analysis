@@ -1,211 +1,148 @@
-## 🔁 Data Science Workflow Flowchart – Brent Oil Price Project
+# Event Driven Oil Analysis
 
-```text
-+-----------------------------+
-| 1. Research & Development   |
-+-----------------------------+
-            |
-            v
-+-----------------------------+
-| 2. Data Collection & Prep   |
-| • Load Brent price data     |
-| • Collect 10–15 key events  |
-+-----------------------------+
-            |
-            v
-+-----------------------------+
-| 3. Data Cleaning & Preproc  |
-| • Convert dates             |
-| • Compute log returns       |
-| • Remove nulls/duplicates   |
-+-----------------------------+
-            |
-            v
-+-----------------------------+
-| 4. Exploratory Data Analysis|
-| • Plot prices & returns     |
-| • Stationarity checks (ADF) |
-| • Overlay events on timeline|
-+-----------------------------+
-            |
-            v
-+-----------------------------+
-| 5. Feature Engineering      |
-| • Volatility indicators     |
-| • Event encodings (optional)|
-+-----------------------------+
-            |
-            v
-+-----------------------------+
-| 6. Model Deployment         |
-| • PyMC3 Bayesian model      |
-| • Flask API backend         |
-| • React dashboard frontend  |
-+-----------------------------+
-            |
-            v
-+-----------------------------+
-| 7. Monitoring & Maintenance |
-| • Future real-time updates  |
-| • Multi-CPD or VAR modeling |
-+-----------------------------+
+## Overview
+
+This project analyzes how major geopolitical and economic events impact **Brent crude oil prices** over time by detecting statistically significant change points in the price series. Using a **Bayesian Change Point Detection** model implemented with **PyMC3**, we identify structural breaks in the oil price trends and link them to key events like OPEC decisions, wars, sanctions, and pandemics. The insights support investors, policymakers, and energy companies in making informed decisions.
+
+---
+
+## Project Goals
+
+* Detect significant structural changes (change points) in Brent oil prices from 1987 to 2022.
+* Associate detected change points with major geopolitical and economic events.
+* Quantify the magnitude and impact of these shifts.
+* Build an interactive dashboard for stakeholders to explore price changes and event correlations.
+
+---
+
+## Data
+
+* **Brent Oil Price Data:** Daily prices from May 20, 1987 to September 30, 2022 (USD per barrel).
+* **Event Dataset:** A curated list of major events (e.g., OPEC meetings, wars, economic crises) with dates and descriptions.
+
+---
+
+## Methodology
+
+1. **Data Preparation**
+
+   * Convert dates to datetime format
+   * Calculate log returns to stabilize variance
+   * Clean data: handle missing values and duplicates
+
+2. **Exploratory Data Analysis (EDA)**
+
+   * Plot price trends and log returns
+   * Perform stationarity tests (ADF, KPSS)
+   * Overlay key events on price timeline
+
+3. **Bayesian Change Point Detection**
+
+   * Model a discrete change point (tau) with a uniform prior
+   * Define separate means before and after tau
+   * Use PyMC3 and MCMC sampling for posterior inference
+   * Identify probable change points and estimate price regime shifts
+
+4. **Insight Generation**
+
+   * Map change points to known events
+   * Quantify changes in mean price and volatility
+   * Generate probabilistic statements on regime changes
+
+5. **Dashboard Development**
+
+   * Backend with Flask serving model outputs and event data via API
+   * Frontend with React offering interactive visualizations, filters, and event highlights
+
+---
+
+## Assumptions & Limitations
+
+* **Assumptions:**
+
+  * Major events can cause immediate or delayed impacts on oil prices.
+  * Brent prices are driven mainly by external geopolitical and macroeconomic factors.
+  * Price series exhibits regime shifts modeled as stochastic processes.
+
+* **Limitations:**
+
+  * Correlation does not imply causation — detected change points may not be caused by identified events.
+  * Some changes may be due to market speculation or data noise.
+  * Analysis uses only price data without other economic indicators, possibly missing broader context.
+
+---
+
+## How to Use This Repository
+
+* `data/` contains the Brent price data and event list CSV files.
+* `notebooks/` contains EDA and modeling Jupyter notebooks.
+* `model/` includes PyMC3 Bayesian Change Point Detection implementation.
+* `dashboard/` has Flask backend and React frontend source code.
+
+---
+
+## Getting Started
+
+### Setup
+
+```bash
+# Clone repo
+git clone https://github.com/segnig/event-driven-oil-analysis.git
+cd event-driven-oil-analysis
+
+# Create virtual environment and install dependencies
+python -m venv venv
+source venv/bin/activate  # Unix
+# or
+venv\Scripts\activate     # Windows
+
+pip install -r requirements.txt
 ```
----
-### 🧪 **1. Research and Development**
 
-**Objective:** Understand the business context, research relevant models, and define analysis goals.
+### Run the Model
 
-**Project-specific Actions:**
-
-* Understand the main question: *How do political, economic, or geopolitical events impact Brent oil prices?*
-* Read challenge documentation and references (Bayesian inference, PyMC3, MCMC, Change Point Detection).
-* Study past major oil price shocks (e.g., Gulf War, COVID-19, 2022 Russia-Ukraine war, OPEC announcements).
-* Define analysis goals:
-
-  * Detect structural changes in oil prices.
-  * Link these changes to real-world events.
-  * Quantify impact.
-* Identify suitable stakeholders (investors, energy companies, policymakers).
-
----
-
-### 📥 **2. Data Collection and Preparation**
-
-**Objective:** Acquire all relevant data and prepare it for analysis.
-
-**Project-specific Actions:**
-
-* Load the historical Brent oil price dataset (1987-05-20 to 2022-09-30).
-* Research and compile **10–15 major events** that may have influenced oil prices.
-* Create an **event dataset** (`events.csv`) with the following structure:
-
-```csv
-Event,Date,Description
-"OPEC Production Cut",2020-04-12,"OPEC+ agreed on historic production cut during COVID-19"
-"Russia-Ukraine War Begins",2022-02-24,"Invasion led to global energy supply concerns"
+```bash
+python model/change_point_model.py
 ```
 
-* Ensure **date format consistency** between datasets.
-* Align event dates with the Brent price timeline for correlation analysis.
+### Start the Dashboard
+
+```bash
+cd dashboard/backend
+flask run
+```
+
+In a separate terminal:
+
+```bash
+cd dashboard/frontend
+npm install
+npm start
+```
+
+Open `http://localhost:3000` to explore the dashboard.
 
 ---
 
-### 🧹 **3. Data Cleaning and Preprocessing**
+## Future Work
 
-**Objective:** Ensure high data quality and prepare for modeling.
-
-**Project-specific Actions:**
-
-* Convert `Date` column to `datetime` format.
-* Sort records chronologically.
-* Check and handle:
-
-  * Missing values
-  * Duplicates
-  * Outliers (if any)
-* Create new features:
-
-  * **Log returns**: `log_return = log(price_t) - log(price_{t-1})` to stabilize variance.
-  * Optional: Rolling mean, rolling std deviation (for volatility).
-* Clean and format the event dataset (no typos, proper spacing, valid dates).
+* Extend to detect multiple change points.
+* Integrate macroeconomic variables (GDP, inflation, exchange rates).
+* Add real-time data ingestion and automated event detection.
+* Explore advanced models (Markov Switching, VAR).
 
 ---
 
-### 📊 **4. Exploratory Data Analysis (EDA)**
+## References
 
-**Objective:** Visually and statistically explore patterns, trends, and anomalies.
-
-**Project-specific Actions:**
-
-* Plot Brent oil prices over time.
-* Plot **log returns** to detect **volatility clustering**.
-* Use **rolling averages** to highlight long-term trends.
-* Overlay major events on price plots to **visually assess impacts**.
-* Perform stationarity tests:
-
-  * ADF (Augmented Dickey-Fuller)
-  * KPSS (Kwiatkowski-Phillips-Schmidt-Shin)
-* Highlight periods of extreme volatility, price drops, or jumps.
+* Bayesian Change Point Detection with PyMC3: [https://docs.pymc.io/en/stable/](https://docs.pymc.io/en/stable/)
+* Data Science Workflow: [https://www.datascience-pm.com/data-science-workflow/](https://www.datascience-pm.com/data-science-workflow/)
+* Change Point Detection tutorials: [https://forecastegy.com/posts/change-point-detection-time-series-python/](https://forecastegy.com/posts/change-point-detection-time-series-python/)
+* Historical Brent oil price sources: EIA, Yahoo Finance
 
 ---
 
-### 🧱 **5. Feature Engineering**
+## Contact
 
-**Objective:** Create additional relevant variables for better modeling and analysis.
-
-**Project-specific Actions:**
-
-* Calculate:
-
-  * Log returns
-  * Rolling mean (e.g., 30-day moving average)
-  * Rolling standard deviation (volatility)
-* Encode event types (optional): e.g.,
-  `event_type = { "war", "sanction", "OPEC decision", "pandemic", "economic crisis" }`
-* Create lag features if needed (e.g., price lag, volatility lag).
-* Binary indicators for whether an event occurred on a given date.
-
-> ✅ **Note:** Feature engineering is minimal in change point analysis, but helpful for future model extensions or correlation exploration.
-
----
-
-### 🔧 **6. Model Deployment**
-
-**Objective:** Apply Bayesian Change Point Detection and deploy interactive insights.
-
-**Project-specific Actions:**
-
-#### A. **Modeling (using PyMC3)**
-
-* Define a **Bayesian Change Point model**:
-
-  * Set a **discrete uniform prior** over time for the change point `tau`.
-  * Define two means: `mu_1` (before change), `mu_2` (after change).
-  * Use `pm.math.switch()` to change behavior after `tau`.
-  * Use `pm.Normal()` for likelihood.
-  * Run `pm.sample()` to generate posterior samples via MCMC.
-
-#### B. **Insight Generation**
-
-* Identify most probable **change point dates**.
-* Quantify change:
-
-  * “Mean price shifted from \$X to \$Y”
-  * “Volatility increased by Z%”
-* Match change points to known events from the dataset.
-
-#### C. **Dashboard Deployment (Flask + React)**
-
-* Flask backend:
-
-  * Serve API with model outputs (e.g., change points, summary stats).
-  * Optionally include event-to-change-point mapping.
-* React frontend:
-
-  * Interactive time series visualization.
-  * Highlight known events.
-  * Allow users to explore price trends, zoom on change points, filter by date or event type.
-* Use libraries like:
-
-  * `Recharts`, `Chart.js`, or `D3.js` for graphs.
-  * Axios or Fetch for API calls.
-
----
-
-### 🛠️ **7. Model Monitoring and Maintenance**
-
-**Objective:** Plan for long-term model improvement and system sustainability.
-
-**Project-specific Actions:**
-
-* Discuss potential extensions:
-
-  * Multi-change-point detection
-  * Use of **Markov Switching models** or **VAR models**
-  * Integration of **macroeconomic indicators** (GDP, inflation, currency rates)
-* Suggest pipeline for real-time oil price ingestion (e.g., from APIs like EIA).
-* Highlight the importance of regular:
-
-  * Model re-calibration
-  * Dashboard updates
-  * Stakeholder feedback loops
+Created by \[Your Name]
+Email: [segnigirma11@gmail.com](mailto:segnigirma11@gmail.com)
