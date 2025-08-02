@@ -10,3 +10,6 @@ pandas
 
 # visualization
 seaborn
+
+pymc3 
+arviz
