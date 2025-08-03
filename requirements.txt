@@ -1,0 +1,12 @@
+bs4
+requests
+
+# jupyter
+jupyterlab
+
+# data science
+numpy
+pandas
+
+# visualization
+seaborn
