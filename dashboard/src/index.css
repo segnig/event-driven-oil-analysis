@@ -1,0 +1,39 @@
+.App {
+  text-align: center;
+  font-family: sans-serif;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+}
+
+.App-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.loading-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.chart-container {
+  width: 90%;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.summary-card {
+  width: 70%;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border-left: 5px solid #8884d8;
+  background-color: #f0f0f8;
+  text-align: left;
+  border-radius: 0 8px 8px 0;
+}
